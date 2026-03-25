@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('about/', views.about, name='about'),
-    path('contacts/', views.contacts, name='contacts'),
+    path('', views.main_page, name='main'),
+    path('<str:page_id>/', views.dynamic_page, name='dynamic_page'),
 ]
