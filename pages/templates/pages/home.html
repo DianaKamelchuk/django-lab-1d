@@ -1,22 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ title }}</title>
-</head>
-<body>
-    <h1>{{ title }}</h1>
+<h1>Головна сторінка</h1>
 
-    {% if is_main %}
-        <h3>Оберіть розділ:</h3>
-        <ul>
-            {% for item in pages %}
-                <li><a href="{% url 'dynamic_page' item %}">{{ item }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>{{ content }}</p>
-        <hr>
-        <a href="{% url 'main' %}">← Назад на головну</a>
-    {% endif %}
-</body>
-</html>
+<a href="/about/">Про нас</a><br>
+<a href="/contacts/">Контакти</a>
