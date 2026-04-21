@@ -1,21 +1,16 @@
 from django.contrib import admin
-from .models import Page, Category, Post
-
-
-@admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug')
-    search_fields = ('title',)
-    prepopulated_fields = {'slug': ('title',)}
-
+from .models import Category, Product, Order
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'created_at', 'updated_at')
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category')
-    list_filter = ('category',)
-    search_fields = ('title',)
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'category', 'created_at', 'updated_at')
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'customer_name', 'created_at', 'updated_at')
