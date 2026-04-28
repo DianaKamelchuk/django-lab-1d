@@ -1,7 +1,7 @@
 {% extends 'pages/base.html' %}
 
 {% block content %}
-<h1>Товари</h1>
+<h1>Категорія</h1>
 
 {% for product in products %}
     <div>
@@ -10,5 +10,7 @@
         <p>Ціна: {{ product.price }}</p>
     </div>
 {% endfor %}
+
+<a href="/">На головну</a>
 
 {% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jewelry Shop</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <h2>Jewelry Shop</h2>
+
+    <nav>
+        <a href="/">Головна</a>
+
+        {% for category in categories %}
+            <a href="/category/{{ category.id }}/">{{ category.name }}</a>
+        {% endfor %}
+    </nav>
+</header>
+
+<hr> 
+
+{% block content %}
+{% endblock %}
+
+<hr>
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-left">
+            <h3>Приєднуйтесь до нас:</h3>
+            <p>📱 Telegram</p>
+            <p>▶️ YouTube</p>
+            <p>📸 Instagram</p>
+            <p>🎵 TikTok</p>
+        </div>
+
+        <div class="footer-right">
+            <h3>Каталог</h3>
+            <p>Сережки</p>
+            <p>Намиста</p>
+            <p>Браслети</p>
+            <p>Каблучки</p>
+            <p>Ланцюжки</p>
+        </div>
+
+    </div>
+
+    <p class="footer-bottom">© Luna Jewelry 2026</p>
+</footer>
+
+</body>
+</html>
