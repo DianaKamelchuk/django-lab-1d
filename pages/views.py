@@ -19,3 +19,12 @@ def category_view(request, id):
         'products': products,
         'categories': categories
     })
+    
+def product_detail(request, id):
+    product = Product.objects.get(id=id)
+    categories = Category.objects.all()
+
+    return render(request, 'pages/product.html', {
+        'product': product,
+        'categories': categories
+    })
