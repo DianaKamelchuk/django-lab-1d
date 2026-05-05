@@ -30,3 +30,16 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Замовлення {self.id}"
+    
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+
+class Subscriber(models.Model):
+    email = models.EmailField()
+
+
+class Rating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    value = models.IntegerField()  # 1-5

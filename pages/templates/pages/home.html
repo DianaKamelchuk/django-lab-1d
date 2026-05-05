@@ -1,11 +1,21 @@
+<div class="products">
+
 {% for product in products %}
-    <div>
-        <h3>
-            <a href="/product/{{ product.id }}/">
-                {{ product.name }}
-            </a>
-        </h3>
-        <p>{{ product.description }}</p>
-        <p>Ціна: {{ product.price }}</p>
+    <div class="product-card">
+
+        <a href="/product/{{ product.id }}/">
+            <img src="{{ product.image.url }}">
+        </a>
+
+        <h3>{{ product.name }}</h3>
+
+        <p class="price">{{ product.price }} грн</p>
+
+        <a href="/add-to-cart/{{ product.id }}/">
+            <button class="buy-btn-small">Купити</button>
+        </a>
+
     </div>
 {% endfor %}
+
+</div>

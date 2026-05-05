@@ -2,17 +2,56 @@
 
 {% block content %}
 
-<h1>{{ product.name }}</h1>
+<div class="product-page">
 
-{% if product.image %}
-    <img src="{{ product.image.url }}" width="300">
-{% endif %}
+    <div class="product-left">
+        {% if product.image %}
+            <img src="{{ product.image.url }}">
+        {% endif %}
+    </div>
 
-<p>{{ product.description }}</p>
-<p>Ціна: {{ product.price }} грн</p>
+    <div class="product-right">
 
-<button>Купити</button>
+        <h1>{{ product.name }}</h1>
 
-<a href="/">← Назад</a>
+        <p class="product-description">
+            {{ product.description }}
+        </p>
+
+        <p class="price">{{ product.price }} грн</p>
+
+        {% if avg_rating %}
+            <p class="rating">⭐ {{ avg_rating|floatformat:1 }} / 5</p>
+        {% else %}
+            <p class="rating">Ще немає оцінок</p>
+        {% endif %}
+
+        <a href="/add-to-cart/{{ product.id }}/">
+            <button class="buy-btn">Купити</button>
+        </a>
+
+        <!-- ⭐ ОЦІНКА ЗІРОЧКАМИ -->
+        <div class="rating-box">
+            <h3>Оцініть товар:</h3>
+
+            <div class="stars">
+                <form method="post" action="/rate/{{ product.id }}/">
+                    {% csrf_token %}
+
+                    <button name="rating" value="1">⭐</button>
+                    <button name="rating" value="2">⭐⭐</button>
+                    <button name="rating" value="3">⭐⭐⭐</button>
+                    <button name="rating" value="4">⭐⭐⭐⭐</button>
+                    <button name="rating" value="5">⭐⭐⭐⭐⭐</button>
+                </form>
+            </div>
+        </div>
+
+        <br>
+        <a href="/" class="back-link">← Назад</a>
+
+    </div>
+
+</div>
 
 {% endblock %}
