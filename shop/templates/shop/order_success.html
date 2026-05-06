@@ -1,0 +1,15 @@
+{% extends 'shop/base.html' %}
+{% block title %}Замовлення прийнято — ShineUA{% endblock %}
+
+{% block content %}
+<div class="container" style="text-align:center; padding: 80px 0;">
+    <div style="font-size: 64px; margin-bottom: 24px;">✅</div>
+    <h1>Дякуємо за замовлення!</h1>
+    <p style="font-size: 18px; color: #666; margin: 16px 0 32px;">
+        Ми зв'яжемось з вами найближчим часом для підтвердження.
+    </p>
+    <a href="{% url 'index' %}" class="btn btn--primary btn--lg">
+        Повернутись на головну
+    </a>
+</div>
+{% endblock %}

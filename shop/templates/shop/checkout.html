@@ -1,0 +1,149 @@
+{% extends 'shop/base.html' %}
+{% block title %}Оформлення замовлення — ShineUA{% endblock %}
+
+{% block content %}
+<div class="container checkout-page">
+    <h1 class="checkout__title">ОФОРМЛЕННЯ</h1>
+
+    <div class="checkout__layout">
+        <form method="post" class="checkout__form">
+            {% csrf_token %}
+
+            <div class="checkout__step">
+                <h2><span class="step-num">1</span> ЗАПОВНІТЬ ВАШІ ДАНІ</h2>
+                <div class="checkout__fields">
+                    <div class="form-group">
+                        <input type="text" name="first_name" class="form-input"
+                               placeholder="Ім'я *" required
+                               value="{{ form.first_name.value|default:'' }}">
+                        {% if form.first_name.errors %}
+                            <span class="form-error">{{ form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="last_name" class="form-input"
+                               placeholder="Прізвище *" required
+                               value="{{ form.last_name.value|default:'' }}">
+                    </div>
+                   <div class="form-group">
+                       <input type="tel" name="phone" class="form-input"
+                              placeholder="Телефон * (наприклад: +380991234567)"
+                              pattern="[+0-9]{10,15}"
+                              title="Введіть номер телефону цифрами"
+                              required
+                              value="{{ form.phone.value|default:'' }}">
+                 {% if form.phone.errors %}
+                <span class="form-error">{{ form.phone.errors.0 }}</span>
+                 {% endif %}
+                  </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-input"
+                               placeholder="Адреса електронної пошти *" required
+                               value="{{ form.email.value|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="country" class="form-input"
+                               placeholder="Країна *" value="Україна" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="region" class="form-input"
+                               placeholder="Область *" required
+                               value="{{ form.region.value|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="city" class="form-input"
+                               placeholder="Місто *" required
+                               value="{{ form.city.value|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="street" class="form-input"
+                               placeholder="Вулиця, будинок, квартира *" required
+                               value="{{ form.street.value|default:'' }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout__step">
+                <h2><span class="step-num">2</span> ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
+                <div class="checkout__options">
+                    <label class="option-card">
+                        <input type="radio" name="delivery" value="nova_poshta" checked>
+                        <div class="option-card__inner">
+                            <span>🚚</span>
+                            <span>Нова Пошта</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="delivery" value="ukrposhta">
+                        <div class="option-card__inner">
+                            <span>📦</span>
+                            <span>Укрпошта</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="delivery" value="self_pickup">
+                        <div class="option-card__inner">
+                            <span>🏪</span>
+                            <span>Самовивіз</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checkout__step">
+                <h2><span class="step-num">3</span> ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
+                <div class="checkout__options">
+                    <label class="option-card">
+                        <input type="radio" name="payment" value="online" checked>
+                        <div class="option-card__inner">
+                            <span>💳</span>
+                            <span>Оплата онлайн</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="payment" value="cod">
+                        <div class="option-card__inner">
+                            <span>💵</span>
+                            <span>Накладеним платежем</span>
+                        </div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="payment" value="parts">
+                        <div class="option-card__inner">
+                            <span>🔄</span>
+                            <span>Оплата частинами</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checkout__step">
+                <h2><span class="step-num">4</span> КОМЕНТАР</h2>
+                <div class="form-group">
+                    <textarea name="comment" class="form-input" rows="3"
+                              placeholder="Додати коментар до замовлення..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--lg checkout__submit">
+                ✅ ЗАМОВИТИ
+            </button>
+        </form>
+
+        <!-- Підсумок -->
+        <div class="checkout__summary">
+            <h2>Ваше замовлення</h2>
+            {% for item in cart_items %}
+            <div class="summary-item">
+                <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                <span>{{ item.total }} ₴</span>
+            </div>
+            {% endfor %}
+            <div class="summary-total">
+                <strong>Разом:</strong>
+                <strong>{{ total }} ₴</strong>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

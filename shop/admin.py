@@ -12,10 +12,12 @@ class CategoryAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    readonly_fields = ('price', 'get_total')
+    readonly_fields = ('get_total',)
 
     def get_total(self, obj):
-        return obj.get_total()
+        if obj.price and obj.quantity:
+            return obj.get_total()
+        return '-'
     get_total.short_description = 'Сума'
 
 
@@ -30,10 +32,35 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status', 'total_price', 'created_at', 'updated_at')
-    list_filter = ('status',)
-    search_fields = ('user__username',)
+    list_display = (
+        'id', 'first_name', 'last_name', 'phone', 'email',
+        'full_address', 'delivery', 'payment',
+        'status', 'total_price', 'created_at', 'updated_at'
+    )
+    list_filter = ('status', 'delivery', 'payment')
+    search_fields = ('first_name', 'last_name', 'phone', 'email', 'city')
+    readonly_fields = ('full_address', 'created_at', 'updated_at')
     inlines = [OrderItemInline]
+
+    fieldsets = (
+        ('Покупець', {
+            'fields': ('user', 'first_name', 'last_name', 'phone', 'email')
+        }),
+        ('Адреса доставки', {
+            'fields': ('country', 'region', 'city', 'street', 'full_address')
+        }),
+        ('Замовлення', {
+            'fields': ('delivery', 'payment', 'comment', 'status', 'total_price')
+        }),
+        ('Дати', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+    def full_address(self, obj):
+        parts = [obj.country, obj.region, obj.city, obj.street]
+        return ', '.join(p for p in parts if p)
+    full_address.short_description = 'Повна адреса'
 
 
 @admin.register(Rating)

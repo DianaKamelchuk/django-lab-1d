@@ -25,4 +25,6 @@ urlpatterns = [
     path('account/', views.account_view, name='account'),
     path('password-reset/', views.password_reset_request, name='password_reset'),
     path('password-reset/confirm/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('cart/checkout/', views.checkout, name='checkout'),
+    path('order/success/', views.order_success, name='order_success'), 
 ]

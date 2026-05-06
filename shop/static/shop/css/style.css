@@ -180,3 +180,29 @@ img { max-width: 100%; display: block; }
     .footer__inner { grid-template-columns: 1fr 1fr; }
     .cart__table { font-size: 13px; }
 }
+
+/* ── Checkout ── */
+.checkout-page { padding: 40px 0; }
+.checkout__title { font-size: 28px; font-weight: 800; margin-bottom: 32px; letter-spacing: 2px; }
+.checkout__layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start; }
+.checkout__step { background: var(--color-white); border: 1px solid var(--color-gray-200); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.checkout__step h2 { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; letter-spacing: 1px; }
+.step-num { background: var(--color-primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.checkout__fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.checkout__fields .form-group:last-child { grid-column: 1 / -1; }
+.checkout__options { display: flex; gap: 12px; flex-wrap: wrap; }
+.option-card input[type=radio] { display: none; }
+.option-card__inner { border: 2px solid var(--color-gray-200); border-radius: var(--radius); padding: 16px 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; transition: all .2s; min-width: 100px; }
+.option-card input[type=radio]:checked + .option-card__inner { border-color: var(--color-primary); background: #eff6ff; }
+.option-card__inner:hover { border-color: var(--color-primary); }
+.checkout__submit { width: 100%; justify-content: center; font-size: 18px; padding: 18px; letter-spacing: 2px; }
+.checkout__summary { background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius); padding: 24px; position: sticky; top: 80px; }
+.checkout__summary h2 { font-size: 18px; margin-bottom: 16px; }
+.summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-gray-200); font-size: 14px; }
+.summary-total { display: flex; justify-content: space-between; padding: 16px 0 0; font-size: 18px; }
+
+@media (max-width: 768px) {
+    .checkout__layout { grid-template-columns: 1fr; }
+    .checkout__fields { grid-template-columns: 1fr; }
+    .checkout__fields .form-group:last-child { grid-column: 1; }
+}

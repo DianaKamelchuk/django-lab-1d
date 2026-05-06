@@ -11,7 +11,7 @@ from django.db.models import Avg
 from .models import Category, Product, Order, OrderItem, Rating, Newsletter
 from .forms import (
     RegisterForm, LoginForm, NewsletterForm, RatingForm,
-    PasswordResetRequestForm, PasswordResetConfirmForm
+    PasswordResetRequestForm, PasswordResetConfirmForm, CheckoutForm 
 )
 
 
@@ -114,34 +114,71 @@ def remove_from_cart(request, product_id):
     request.session['cart'] = cart
     return redirect('cart')
 
-
 def checkout(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
     cart = request.session.get('cart', {})
     if not cart:
         messages.warning(request, 'Кошик порожній!')
         return redirect('cart')
 
-    order = Order.objects.create(user=request.user)
+    cart_items = []
     total = 0
     for product_id, item in cart.items():
         try:
             product = Product.objects.get(id=int(product_id))
-            OrderItem.objects.create(
-                order=order,
-                product=product,
-                quantity=item['quantity'],
-                price=product.price,
-            )
-            total += product.price * item['quantity']
+            item_total = product.price * item['quantity']
+            total += item_total
+            cart_items.append({
+                'product': product,
+                'quantity': item['quantity'],
+                'total': item_total,
+            })
         except Product.DoesNotExist:
             pass
-    order.total_price = total
-    order.save()
+    
+        form = CheckoutForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+     order = Order.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            first_name=form.cleaned_data['first_name'],
+            last_name=form.cleaned_data['last_name'],
+            phone=form.cleaned_data['phone'],
+            email=form.cleaned_data['email'],
+            country=form.cleaned_data['country'],
+            region=form.cleaned_data['region'],
+            city=form.cleaned_data['city'],
+            street=form.cleaned_data['street'],
+            delivery=form.cleaned_data['delivery'],
+            payment=form.cleaned_data['payment'],
+            comment=form.cleaned_data['comment'],
+           total_price=total, 
+           )
+     
+    for product_id, item in cart.items():
+            try:
+                product = Product.objects.get(id=int(product_id))
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=item['quantity'],
+                    price=product.price,
+                )
+            except Product.DoesNotExist:
+                pass
+
     request.session['cart'] = {}
-    messages.success(request, f'Замовлення #{order.id} оформлено!')
-    return redirect('account')
+    messages.success(request, f'Замовлення #{order.id} успішно оформлено! Дякуємо!')
+    return redirect('order_success')
+
+    return render(request, 'shop/checkout.html', {
+        'form': form,
+        'cart_items': cart_items,
+        'total': total,
+    })
+
+
+def order_success(request):
+    return render(request, 'shop/order_success.html')
 
 
 # ───────────── Розсилка (Лаба 7) ─────────────

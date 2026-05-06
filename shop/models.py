@@ -48,8 +48,6 @@ class Product(models.Model):
         if ratings.exists():
             return round(sum(r.score for r in ratings) / ratings.count(), 1)
         return None
-
-
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Очікує'),
@@ -59,9 +57,24 @@ class Order(models.Model):
         ('cancelled', 'Скасовано'),
     ]
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        related_name='orders', verbose_name='Користувач'
+        User, on_delete=models.SET_NULL,
+        related_name='orders', verbose_name='Користувач',
+        null=True, blank=True
     )
+    # Дані покупця
+    first_name = models.CharField('Ім\'я', max_length=100, blank=True)
+    last_name = models.CharField('Прізвище', max_length=100, blank=True)
+    phone = models.CharField('Телефон', max_length=20, blank=True)
+    email = models.EmailField('Email', blank=True)
+    # Адреса доставки
+    country = models.CharField('Країна', max_length=100, blank=True, default='Україна')
+    region = models.CharField('Область', max_length=100, blank=True)
+    city = models.CharField('Місто', max_length=100, blank=True)
+    street = models.CharField('Вулиця, будинок, квартира', max_length=255, blank=True)
+    # Доставка і оплата
+    delivery = models.CharField('Доставка', max_length=50, blank=True)
+    payment = models.CharField('Оплата', max_length=50, blank=True)
+    comment = models.TextField('Коментар', blank=True)
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='pending')
     total_price = models.DecimalField('Сума', max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField('Створено о', auto_now_add=True)
@@ -73,9 +86,11 @@ class Order(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Замовлення #{self.id} — {self.user.username}'
+        return f'Замовлення #{self.id} — {self.first_name} {self.last_name}'
 
-
+    def full_address(self):
+        return f'{self.country}, {self.region}, {self.city}, {self.street}'
+    
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE,
