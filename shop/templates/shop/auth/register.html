@@ -1,0 +1,23 @@
+{% extends 'shop/base.html' %}
+{% block title %}Реєстрація — ShopUA{% endblock %}
+{% block content %}
+<div class="container auth-page">
+    <div class="auth-card">
+        <h1>Реєстрація</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="form-error">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn--primary btn--full">Зареєструватись</button>
+        </form>
+        <p class="auth-links">Вже є акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'shop/base.html' %}
+{% block title %}Особистий кабінет — ShopUA{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>👤 Особистий кабінет</h1>
+    <p>Привіт, <strong>{{ user.username }}</strong>!
+    {% if user.is_staff %} (Адміністратор){% endif %}</p>
+
+    <h2>{% if user.is_staff %}Всі замовлення{% else %}Мої замовлення{% endif %}</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-card__header">
+                <span>Замовлення #{{ order.id }}</span>
+                {% if user.is_staff %}<span>{{ order.user.username }}</span>{% endif %}
+                <span class="order-status order-status--{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+                <span>{{ order.created_at|date:"d.m.Y H:i" }}</span>
+                <strong>{{ order.total_price }} ₴</strong>
+            </div>
+            <ul class="order-card__items">
+                {% for item in order.items.all %}
+                    <li>{{ item.product.name }} × {{ item.quantity }} — {{ item.get_total }} ₴</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Замовлень поки немає.</p>
+    {% endif %}
+
+    <div class="account-links">
+        <a href="{% url 'password_reset' %}" class="btn btn--outline">Змінити пароль</a>
+        <a href="{% url 'logout' %}" class="btn btn--danger">Вийти</a>
+    </div>
+</div>
+{% endblock %}

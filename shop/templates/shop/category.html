@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}{{ category.name }} — ShopUA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="breadcrumb">
+        <a href="{% url 'index' %}">Головна</a> → {{ category.name }}
+    </div>
+
+    <div class="page-header">
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+            <p>{{ category.description }}</p>
+        {% endif %}
+    </div>
+
+    <div class="products-grid">
+        {% for product in products %}
+            {% include 'shop/includes/product_card.html' with product=product %}
+        {% empty %}
+            <p class="empty-msg">У цій категорії поки немає товарів.</p>
+        {% endfor %}
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'index' %}" class="btn btn--outline">← На головну</a>
+    </div>
+</div>
+{% endblock %}

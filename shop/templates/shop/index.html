@@ -1,0 +1,47 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}ShopUA — Головна{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero__inner">
+        <h1 class="hero__title">Ласкаво просимо до ShineUA</h1>
+        <p class="hero__subtitle">Найкращі товари за найкращими цінами</p>
+        <a href="#categories" class="btn btn--primary btn--lg">Переглянути каталог</a>
+    </div>
+</section>
+
+<section class="section" id="categories">
+    <div class="container">
+        <h2 class="section__title">Категорії</h2>
+        <div class="categories-grid">
+            {% for cat in categories %}
+            <a href="{% url 'category_detail' cat.slug %}" class="category-card">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                {% else %}
+                    <div class="category-card__placeholder">📦</div>
+                {% endif %}
+                <h3>{{ cat.name }}</h3>
+                <p>{{ cat.products.count }} товарів</p>
+            </a>
+            {% empty %}
+                <p>Категорій поки немає.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section section--gray">
+    <div class="container">
+        <h2 class="section__title">Нові надходження</h2>
+        <div class="products-grid">
+            {% for product in featured_products %}
+                {% include 'shop/includes/product_card.html' with product=product %}
+            {% empty %}
+                <p>Товарів поки немає.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

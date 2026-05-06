@@ -1,0 +1,83 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}{{ product.name }} — ShopUA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="breadcrumb">
+        <a href="{% url 'index' %}">Головна</a> →
+        <a href="{% url 'category_detail' product.category.slug %}">{{ product.category.name }}</a> →
+        {{ product.name }}
+    </div>
+
+    <div class="product-detail">
+        <div class="product-detail__image">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="product-detail__no-img">🖼</div>
+            {% endif %}
+        </div>
+
+        <div class="product-detail__info">
+            <h1>{{ product.name }}</h1>
+            <p class="product-detail__price">{{ product.price }} ₴</p>
+
+            {% if avg_rating %}
+                <p class="product-detail__rating">
+                    ⭐ Середня оцінка: <strong>{{ avg_rating }}/5</strong>
+                </p>
+            {% else %}
+                <p class="product-detail__rating">Ще немає оцінок</p>
+            {% endif %}
+
+            <p class="product-detail__stock">
+                {% if product.stock > 0 %}
+                    ✅ В наявності: {{ product.stock }} шт.
+                {% else %}
+                    ❌ Немає в наявності
+                {% endif %}
+            </p>
+
+            {% if product.description %}
+                <p class="product-detail__desc">{{ product.description }}</p>
+            {% endif %}
+
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn--primary btn--lg">
+                🛒 Додати в кошик
+            </a>
+            <a href="{% url 'cart' %}" class="btn btn--outline btn--lg">Перейти в кошик</a>
+        </div>
+    </div>
+
+    <!-- Рейтинг (Лаба 7) -->
+    <div class="rating-section">
+        <h2>Оцінити товар</h2>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="rate" value="1">
+                <div class="rating-stars">
+                    {% for choice in rating_form.score %}
+                        <label class="star-label">
+                            {{ choice.tag }}
+                            <span>{{ choice.choice_label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn--primary">
+                    {% if user_rating %}Оновити оцінку{% else %}Оцінити{% endif %}
+                </button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">Увійдіть</a>, щоб оцінити товар.</p>
+        {% endif %}
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'category_detail' product.category.slug %}" class="btn btn--outline">
+            ← До категорії
+        </a>
+    </div>
+</div>
+{% endblock %}

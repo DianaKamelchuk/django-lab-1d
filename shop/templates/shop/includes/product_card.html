@@ -1,0 +1,24 @@
+<div class="product-card">
+    <a href="{% url 'product_detail' product.slug %}">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-card__img">
+        {% else %}
+            <div class="product-card__no-img">🖼</div>
+        {% endif %}
+    </a>
+    <div class="product-card__body">
+        <h3 class="product-card__name">
+            <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+        </h3>
+        <p class="product-card__price">{{ product.price }} ₴</p>
+        {% with avg=product.average_rating %}
+            {% if avg %}
+                <p class="product-card__rating">⭐ {{ avg }}/5</p>
+            {% endif %}
+        {% endwith %}
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn--primary btn--sm">
+            🛒 В кошик
+        </a>
+    </div>
+    
+    </div>
