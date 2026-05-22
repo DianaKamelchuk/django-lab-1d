@@ -11,7 +11,7 @@ from django.db.models import Avg
 from .models import Category, Product, Order, OrderItem, Rating, Newsletter
 from .forms import (
     RegisterForm, LoginForm, NewsletterForm, RatingForm,
-    PasswordResetRequestForm, PasswordResetConfirmForm, CheckoutForm 
+    PasswordResetRequestForm, PasswordResetConfirmForm, CheckoutForm
 )
 
 
@@ -114,6 +114,8 @@ def remove_from_cart(request, product_id):
     request.session['cart'] = cart
     return redirect('cart')
 
+
+# ───────────── Оформлення замовлення (Лаба 7) ─────────────
 def checkout(request):
     cart = request.session.get('cart', {})
     if not cart:
@@ -134,11 +136,11 @@ def checkout(request):
             })
         except Product.DoesNotExist:
             pass
-    
-        form = CheckoutForm(request.POST or None)
+
+    form = CheckoutForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
-     order = Order.objects.create(
+        order = Order.objects.create(
             user=request.user if request.user.is_authenticated else None,
             first_name=form.cleaned_data['first_name'],
             last_name=form.cleaned_data['last_name'],
@@ -151,10 +153,9 @@ def checkout(request):
             delivery=form.cleaned_data['delivery'],
             payment=form.cleaned_data['payment'],
             comment=form.cleaned_data['comment'],
-           total_price=total, 
-           )
-     
-    for product_id, item in cart.items():
+            total_price=total,
+        )
+        for product_id, item in cart.items():
             try:
                 product = Product.objects.get(id=int(product_id))
                 OrderItem.objects.create(
@@ -166,9 +167,9 @@ def checkout(request):
             except Product.DoesNotExist:
                 pass
 
-    request.session['cart'] = {}
-    messages.success(request, f'Замовлення #{order.id} успішно оформлено! Дякуємо!')
-    return redirect('order_success')
+        request.session['cart'] = {}
+        messages.success(request, f'Замовлення #{order.id} успішно оформлено!')
+        return redirect('order_success')
 
     return render(request, 'shop/checkout.html', {
         'form': form,

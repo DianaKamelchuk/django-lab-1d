@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
-{% block title %}Особистий кабінет — ShopUA{% endblock %}
+{% block title %}Особистий кабінет — ShineUA{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>👤 Особистий кабінет</h1>
@@ -12,14 +13,64 @@
         {% for order in orders %}
         <div class="order-card">
             <div class="order-card__header">
-                <span>Замовлення #{{ order.id }}</span>
-                {% if user.is_staff %}<span>{{ order.user.username }}</span>{% endif %}
+                <span><strong>Замовлення #{{ order.id }}</strong></span>
                 <span class="order-status order-status--{{ order.status }}">
                     {{ order.get_status_display }}
                 </span>
                 <span>{{ order.created_at|date:"d.m.Y H:i" }}</span>
                 <strong>{{ order.total_price }} ₴</strong>
             </div>
+
+            <div class="order-card__customer">
+                <div class="order-customer-grid">
+                    <div>
+                        <span class="order-label">👤 Покупець:</span>
+                        <span>{{ order.first_name }} {{ order.last_name }}</span>
+                    </div>
+                    <div>
+                        <span class="order-label">📞 Телефон:</span>
+                        <span>{{ order.phone }}</span>
+                    </div>
+                    <div>
+                        <span class="order-label">📧 Email:</span>
+                        <span>{{ order.email }}</span>
+                    </div>
+                    <div>
+                        <span class="order-label">📦 Доставка:</span>
+                        <span>
+                            {% if order.delivery == 'nova_poshta' %}Нова Пошта
+                            {% elif order.delivery == 'ukrposhta' %}Укрпошта
+                            {% elif order.delivery == 'self_pickup' %}Самовивіз
+                            {% else %}{{ order.delivery }}{% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="order-label">💳 Оплата:</span>
+                        <span>
+                            {% if order.payment == 'online' %}Онлайн
+                            {% elif order.payment == 'cod' %}Накладеним платежем
+                            {% elif order.payment == 'parts' %}Частинами
+                            {% else %}{{ order.payment }}{% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="order-label">📍 Адреса:</span>
+                        <span>
+                            {% if order.country %}{{ order.country }}, {% endif %}
+                            {% if order.region %}{{ order.region }}, {% endif %}
+                            {% if order.city %}{{ order.city }}, {% endif %}
+                            {% if order.street %}{{ order.street }}{% endif %}
+                        </span>
+                    </div>
+                    {% if order.comment %}
+                    <div style="grid-column: 1 / -1;">
+                        <span class="order-label">💬 Коментар:</span>
+                        <span>{{ order.comment }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
             <ul class="order-card__items">
                 {% for item in order.items.all %}
                     <li>{{ item.product.name }} × {{ item.quantity }} — {{ item.get_total }} ₴</li>
